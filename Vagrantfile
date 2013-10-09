@@ -48,7 +48,7 @@ Vagrant.configure('2') do |config|
   # Give the created VM 768M of RAM
   config.vm.provider :virtualbox do |box|
    box.customize ['modifyvm', :id, '--memory', custom_config['memory']]
-   box.name = "Parrot"
+   box.name = "Parrot Adapt"
    # Boot with a GUI so you can see the screen. (Default is headless)
    # box.gui = true
   end
