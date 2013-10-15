@@ -5,3 +5,6 @@ parrot-config/solr/*
 parrot-config/php/parrot-local.ini
 .DS_Store
 tmp/*
+.idea
+.idea/*
+.idea/workspace
