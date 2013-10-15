@@ -61,7 +61,7 @@ class http_stack::apache(
     # The file in sites-available.
     file {"/etc/apache2/sites-available/$name":
       ensure => 'file',
-      content => template('http_stack/apache/vhost.erb'),
+      content => inline_template(file("/vagrant/sites/$name/vhost.erb", "/vagrant/modules/http_stack/templates/apache/vhost.erb")),
       notify => Service['apache2'],
       require => Package['apache2'],
       owner => 'root',
