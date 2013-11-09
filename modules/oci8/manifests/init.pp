@@ -57,6 +57,7 @@ class oci8 {
       Package["php5-dev"],
       File["/home/vagrant/answer-pecl-oci8.txt"]
     ],
+    unless => "/usr/bin/php -me | /bin/grep oci8";
   }
 
   file_line { "add-oci8-php" :
