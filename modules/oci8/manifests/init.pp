@@ -21,7 +21,6 @@ class oci8 {
     cwd => "/home/vagrant",
     require => Package["alien"],
     creates => "/home/vagrant/oracle-instantclient11.2-basic_11.2.0.3.0-2_amd64.deb",
-    #user => root,
     timeout => 3600,
     unless => "/usr/bin/test -f /home/vagrant/oracle-instantclient11.2-basic_11.2.0.3.0-2_amd64.deb";
   "alien devel":
@@ -29,7 +28,6 @@ class oci8 {
       cwd => "/home/vagrant",
       require => [Package["alien"], Exec["alien basic"]],
       creates => "/home/vagrant/oracle-instantclient11.2-devel_11.2.0.3.0-2_amd64.deb",
-      #user => root,
       timeout => 3600,
       unless => "/usr/bin/test -f /home/vagrant/oracle-instantclient11.2-devel_11.2.0.3.0-2_amd64.deb";
   }
@@ -53,7 +51,6 @@ class oci8 {
     #user => root,
     timeout => 0,
     tries   => 5,
-    #unless => "/usr/bin/php -m | grep -c oci8",
     require => [
       Package["oracle-instant-client-basic"],
       Package["oracle-instant-client-devel"],
@@ -79,7 +76,6 @@ class oci8 {
   file_line { "env-oracle" :
     path => "/etc/environment",
     line => "\nexport ORACLE_HOME=/usr/lib/oracle/11.2/client64/lib\nexport NLS_DATE_FORMAT=\"DD/MM/YYYY HH24:MI\"",
-    #notify => Class['http_stack::apacheService'],
     ensure => present,
     require => File_line["add-oci8-php"];
   }
