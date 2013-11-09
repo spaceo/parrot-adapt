@@ -37,4 +37,6 @@ Exec["apt-update"] -> Package <| |>
     grant    => 'ALL',
   }
 
+  class {'oci8': }
+
 }
