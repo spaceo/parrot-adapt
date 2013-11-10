@@ -19,14 +19,14 @@ class oci8 {
   "alien basic":
     command => "/usr/bin/alien --to-deb --scripts oracle-instantclient11.2-basic-11.2.0.3.0-1.x86_64.rpm",
     cwd => "/home/vagrant",
-    require => Package["alien"],
+    require => [Package["alien"], File["/home/vagrant/oracle-instantclient11.2-basic-11.2.0.3.0-1.x86_64.rpm"]],
     creates => "/home/vagrant/oracle-instantclient11.2-basic_11.2.0.3.0-2_amd64.deb",
     timeout => 3600,
     unless => "/usr/bin/test -f /home/vagrant/oracle-instantclient11.2-basic_11.2.0.3.0-2_amd64.deb";
   "alien devel":
       command => "/usr/bin/alien --to-deb --scripts oracle-instantclient11.2-devel-11.2.0.3.0-1.x86_64.rpm",
       cwd => "/home/vagrant",
-      require => [Package["alien"], Exec["alien basic"]],
+      require => [Package["alien"], Exec["alien basic"], File["/home/vagrant/oracle-instantclient11.2-devel-11.2.0.3.0-1.x86_64.rpm"]],
       creates => "/home/vagrant/oracle-instantclient11.2-devel_11.2.0.3.0-2_amd64.deb",
       timeout => 3600,
       unless => "/usr/bin/test -f /home/vagrant/oracle-instantclient11.2-devel_11.2.0.3.0-2_amd64.deb";
