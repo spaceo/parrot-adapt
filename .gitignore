@@ -8,3 +8,4 @@ tmp/*
 .idea
 .idea/*
 .idea/workspace
+sql/kms_live.sql
