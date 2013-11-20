@@ -2,13 +2,12 @@
 
 if [ -f /usr/bin/dropdb ]
 then
-  /usr/bin/dropdb gst  >/dev/null 2>&1
+  /usr/bin/dropdb -e gst
 fi
 
 if [ -f /vagrant/sql/pre_kms_live.sql ]
 then
   /usr/bin/psql -f /vagrant/sql/pre_kms_live.sql
-    echo the file exists
 fi
 
 if [ -f /vagrant/sql/kms_live.sql ]
