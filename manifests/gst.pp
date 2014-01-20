@@ -6,7 +6,7 @@ exec { "apt-update":
 }
 
 Exec["apt-update"] -> Package <| |>
-  
+  # Pear/drush  
   class {'pear': }
   
   exec { "pear update-channels" :
@@ -18,7 +18,15 @@ Exec["apt-update"] -> Package <| |>
     creates => '/usr/bin/drush',
     require => Exec['pear update-channels']
   }
- 
+  # Use the "current_site" drush alias idea.
+  file_line { "drush-current-site" :
+    path => "/etc/bash.bashrc",
+    line => sprintf("\nexport CURRENT_SITE='none'\nfunction dr {\n  drush %s $*\n}", '"@${CURRENT_SITE}"'),
+    ensure => present,
+    require => Exec["pear install drush"];
+  }
+
+  # Postgres 
   package { 'php5-pgsql': }
  
   class { 'postgresql':
@@ -36,7 +44,9 @@ Exec["apt-update"] -> Package <| |>
     password => 'vagrant',
     grant    => 'ALL',
   }
-
+  # Php oracle client
   class {'oci8': }
 
+  # Monit
+ #package { 'monit': }
 }
