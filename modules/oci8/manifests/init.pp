@@ -6,6 +6,9 @@ class oci8 {
     "/home/vagrant/oracle-instantclient11.2-devel-11.2.0.3.0-1.x86_64.rpm":
       ensure => present,
       source => "puppet:///modules/oci8/oracle-instantclient11.2-devel-11.2.0.3.0-1.x86_64.rpm";
+    "/home/vagrant/oracle-instantclient11.2-sqlplus-11.2.0.3.0-1.x86_64.rpm":
+      ensure => present,
+      source => "puppet:///modules/oci8/oracle-instantclient11.2-sqlplus-11.2.0.3.0-1.x86_64.rpm";
     "/home/vagrant/answer-pecl-oci8.txt":
       ensure => present,
       source => "puppet:///modules/oci8/answer-pecl-oci8.txt";
@@ -30,6 +33,13 @@ class oci8 {
       creates => "/home/vagrant/oracle-instantclient11.2-devel_11.2.0.3.0-2_amd64.deb",
       timeout => 3600,
       unless => "/usr/bin/test -f /home/vagrant/oracle-instantclient11.2-devel_11.2.0.3.0-2_amd64.deb";
+  "alien sqlplus":
+      command => "/usr/bin/alien --to-deb --scripts oracle-instantclient11.2-sqlplus-11.2.0.3.0-1.x86_64.rpm",
+      cwd => "/home/vagrant",
+      require => [Package["alien"], Exec["alien basic"], File["/home/vagrant/oracle-instantclient11.2-sqlplus-11.2.0.3.0-1.x86_64.rpm"]],
+      creates => "/home/vagrant/oracle-instantclient11.2-sqlplus-11.2.0.3.0-2_amd64.deb",
+      timeout => 3600,
+      unless => "/usr/bin/test -f /home/vagrant/oracle-instantclient11.2-sqlplus_11.2.0.3.0-2_amd64.deb";
   }
 
   package {
@@ -43,6 +53,11 @@ class oci8 {
       ensure => latest,
       require => [Exec["alien devel"]],
       source => "/home/vagrant/oracle-instantclient11.2-devel_11.2.0.3.0-2_amd64.deb";
+    "oracle-instant-client-sqlplus":
+      provider => "dpkg",
+      ensure => latest,
+      require => [Exec["alien sqlplus"]],
+      source => "/home/vagrant/oracle-instantclient11.2-sqlplus_11.2.0.3.0-2_amd64.deb";
   }
 
   exec { "pecl-install-oci8":
@@ -76,9 +91,15 @@ class oci8 {
 
   file_line { "env-oracle" :
     path => "/etc/environment",
-    line => "\nexport ORACLE_HOME=/usr/lib/oracle/11.2/client64/lib\nexport NLS_DATE_FORMAT=\"DD/MM/YYYY HH24:MI\"",
+    line => "\nexport ORACLE_HOME=/usr/lib/oracle/11.2/client64\nexport NLS_DATE_FORMAT=\"DD/MM/YYYY HH24:MI\"",
     ensure => present,
     require => File_line["add-oci8-php"];
   }
 
+  file_line { "env-sqlplus" :
+    path => "/etc/environment",
+    line => "\nexport LD_LIBRARY_PATH=/usr/lib/oracle/11.2/client64/lib\nexport PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/lib/oracle/11.2/client64/bin",
+    ensure => present,
+    require => File_line["env-oracle"];
+  }
 }
